@@ -21,11 +21,15 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import org.photonvision.PhotonCamera;
 
 import java.io.File;
+import java.lang.management.OperatingSystemMXBean;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
- * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
- * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a "declarative" paradigm, very
+ * little robot logic should actually be handled in the {@link Robot} periodic
+ * methods (other than the scheduler calls).
+ * Instead, the structure of the robot (including subsystems, commands, and
+ * trigger mappings) should be declared here.
  */
 public class RobotContainer {
 
@@ -33,84 +37,89 @@ public class RobotContainer {
 	final CommandPS5Controller driverController = new CommandPS5Controller(0);
 	// The robot's subsystems and commands are defined here...
 	private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-	                                                                       "swerve/neo"));
+			"swerve/neo"));
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
-		  // Configure the trigger bindings
-			configureBindings();
+		// Configure the trigger bindings
+		configureBindings();
 
-		   // Applies deadbands and inverts controls because joysticks
-		  // are back-right positive while robot
-		  // controls are front-left positive
-		  // left stick controls translation
-		  // right stick controls the rotational velocity
-		  // buttons are quick rotation positions to different ways to face
-		//WARNING: default buttons are on the same buttons as the ones defined in configureBinding
-		  AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
-				  () -> -MathUtil.applyDeadband(driverController.getLeftY(),
-						  OperatorConstants.LEFT_Y_DEADBAND),
-				  () -> -MathUtil.applyDeadband(driverController.getLeftX(),
-						  OperatorConstants.LEFT_X_DEADBAND),
-				  () -> -MathUtil.applyDeadband(driverController.getRightX(),
-						  OperatorConstants.RIGHT_X_DEADBAND),
+		// Applies deadbands and inverts controls because joysticks
+		// are back-right positive while robot
+		// controls are front-left positive
+		// left stick controls translation
+		// right stick controls the rotational velocity
+		// buttons are quick rotation positions to different ways to face
+		// WARNING: default buttons are on the same buttons as the ones defined in
+		// configureBinding
+		AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
+				() -> -MathUtil.applyDeadband(driverController.getLeftY(),
+						OperatorConstants.LEFT_Y_DEADBAND),
+				() -> -MathUtil.applyDeadband(driverController.getLeftX(),
+						OperatorConstants.LEFT_X_DEADBAND),
+				() -> -MathUtil.applyDeadband(driverController.getRightX(),
+						OperatorConstants.RIGHT_X_DEADBAND),
 
-				  driverController.getHID()::getTriangleButtonPressed,
-				  driverController.getHID()::getCrossButtonPressed,
-				  driverController.getHID()::getCircleButtonPressed,
-				  driverController.getHID()::getSquareButtonPressed
-		  );
+				driverController.getHID()::getTriangleButtonPressed,
+				driverController.getHID()::getCrossButtonPressed,
+				driverController.getHID()::getCircleButtonPressed,
+				driverController.getHID()::getSquareButtonPressed);
 
-		  // Applies deadbands and inverts controls because joysticks
-	  // are back-right positive while robot
-	  // controls are front-left positive
-	  // left stick controls translation
-	  // right stick controls the desired angle NOT angular rotation
-	  Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-	      () -> MathUtil.applyDeadband(driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-	      () -> MathUtil.applyDeadband(driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-	      () -> driverController.getRightX(),
-	      () -> driverController.getRightY());
+		// Applies deadbands and inverts controls because joysticks
+		// are back-right positive while robot
+		// controls are front-left positive
+		// left stick controls translation
+		// right stick controls the desired angle NOT angular rotation
+		Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+				() -> MathUtil.applyDeadband(driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+				() -> MathUtil.applyDeadband(driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+				() -> driverController.getRightX(),
+				() -> driverController.getRightY());
 
-	  // Applies deadbands and inverts controls because joysticks
-	  // are back-right positive while robot
-	  // controls are front-left positive
-	  // left stick controls translation
-	  // right stick controls the angular velocity of the robot
-	  Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-	      () -> MathUtil.applyDeadband(-driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-	      () -> MathUtil.applyDeadband(-driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-	      () -> driverController.getRightX() * -0.5);
+		// Applies deadbands and inverts controls because joysticks
+		// are back-right positive while robot
+		// controls are front-left positive
+		// left stick controls translation
+		// right stick controls the angular velocity of the robot
+		Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
+				() -> MathUtil.applyDeadband(-driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+				() -> MathUtil.applyDeadband(-driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+				() -> driverController.getRightX() * -0.5);
 
-	  Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
-	      () -> MathUtil.applyDeadband(driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-	      () -> MathUtil.applyDeadband(driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-	      () -> driverController.getRawAxis(2));
+		Command driveFieldOrientedAnglularVelocitySim = drivebase.simDriveCommand(
+				() -> MathUtil.applyDeadband(driverController.getLeftY() * 3.0, OperatorConstants.LEFT_Y_DEADBAND),
+				() -> MathUtil.applyDeadband(driverController.getLeftX() * 3.0, OperatorConstants.LEFT_X_DEADBAND),
+				() -> MathUtil.applyDeadband(driverController.getRawAxis(2), OperatorConstants.RIGHT_X_DEADBAND));
 
-	  drivebase.setDefaultCommand(
-	      !RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocity : driveFieldOrientedDirectAngleSim);
+		drivebase.setDefaultCommand(
+				RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocitySim : driveFieldOrientedAnglularVelocity);
 	}
 
 	/**
-	 * Use this method to define your trigger->command mappings. Triggers can be created via the
-	 * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
-	 * named factories in {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-	 * {@link CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
-	 * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
+	 * Use this method to define your trigger->command mappings. Triggers can be
+	 * created via the
+	 * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+	 * an arbitrary predicate, or via the
+	 * named factories in
+	 * {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses
+	 * for
+	 * {@link CommandXboxController
+	 * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
+	 * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick
+	 * Flight joysticks}.
 	 */
 	private void configureBindings() {
-	// Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+		// Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-	  driverController.cross().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-	driverController.circle().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-	driverController.square().whileTrue(
-			Commands.deferredProxy(() -> drivebase.driveToPose(
-	                               new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-		));
-	driverController.triangle().whileTrue(drivebase.aimAtSpeaker(2));
-	// driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+		driverController.cross().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+		driverController.circle().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+		driverController.square().whileTrue(
+				Commands.deferredProxy(() -> drivebase.driveToPose(
+						new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))));
+		// driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock,
+		// drivebase).repeatedly());
 	}
 
 	/**
@@ -119,16 +128,15 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-	  // An example command will be run in autonomous
-	  return drivebase.getAutonomousCommand("New Auto");
+		// An example command will be run in autonomous
+		return drivebase.getAutonomousCommand("New Auto");
 	}
 
 	public void setDriveMode() {
-	  //drivebase.setDefaultCommand();
+		// drivebase.setDefaultCommand();
 	}
 
-	public void setMotorBrake(boolean brake)
-  {
-    drivebase.setMotorBrake(brake);
-  }
+	public void setMotorBrake(boolean brake) {
+		drivebase.setMotorBrake(brake);
+	}
 }
