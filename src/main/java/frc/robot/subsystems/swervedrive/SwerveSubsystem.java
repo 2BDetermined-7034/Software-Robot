@@ -30,6 +30,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutonConstants;
 import java.io.File;
 import java.util.function.DoubleSupplier;
+
+import frc.robot.RobotContainer;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
@@ -42,13 +44,12 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
-public class SwerveSubsystem extends SubsystemBase
-{
+public class SwerveSubsystem extends SubsystemBase {
 
   /**
    * Swerve drive object.
    */
-  private final SwerveDrive         swerveDrive;
+  private final SwerveDrive swerveDrive;
   /**
    * AprilTag field layout.
    */
@@ -377,8 +378,9 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   @Override
-  public void periodic()
-  {
+  public void periodic() {
+
+//    swerveDrive.addVisionMeasurement(RobotContainer.photonCamera);
   }
 
   @Override
