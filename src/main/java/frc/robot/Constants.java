@@ -12,7 +12,11 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Filesystem;
 import swervelib.math.Matter;
+import frc.robot.AprilTagFieldLayoutLoader;
+
+import java.io.IOException;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -59,7 +63,9 @@ public final class Constants {
 		public static final String CAMERA0_NAME = "arducam0";
 		public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.k2024Crescendo
 				.loadAprilTagLayoutField();
-		public static final Transform3d ROBOT_TO_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.36, 0, 0),
+		public static final AprilTagFieldLayout BUNNY_BOTS_FIELD_LAYOUT = AprilTagFieldLayoutLoader.load(Filesystem.getDeployDirectory() + "/2024-BunnyBots.json");
+
+        public static final Transform3d ROBOT_TO_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.36, 0, 0),
 				new Rotation3d(0, 0, 0));
 	}
 }
