@@ -14,7 +14,7 @@ public class PhotonVisionReal implements PhotonSubsystem {
 	private PhotonCamera photonCamera;
 
 	public PhotonVisionReal() {
-		photonCamera = new PhotonCamera(Constants.VisionConstants.CAMERA1_NAME);
+		photonCamera = new PhotonCamera(Constants.VisionConstants.CAMERA0_NAME);
 		photonPoseEstimator = new PhotonPoseEstimator(Constants.VisionConstants.APRIL_TAG_FIELD_LAYOUT, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera, Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
 	}
 

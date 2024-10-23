@@ -369,8 +369,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
 	public void processVisionMeasurement() {
 		var estimatedPose = photonVision.getEstimatedPose();
-		if (estimatedPose.isPresent()){
+		if (estimatedPose.isPresent()) {
 			swerveDrive.addVisionMeasurement(estimatedPose.get().estimatedPose.toPose2d(), Timer.getFPGATimestamp());
+			SmartDashboard.putBoolean("Vision/isPresent", true);
+		} else {
+			SmartDashboard.putBoolean("Vision/isPresent", false);
 		}
 	}
 

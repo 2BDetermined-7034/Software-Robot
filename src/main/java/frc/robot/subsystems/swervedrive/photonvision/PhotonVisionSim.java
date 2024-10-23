@@ -27,7 +27,7 @@ public class PhotonVisionSim implements PhotonSubsystem {
         cameraProperties.setAvgLatencyMs(35);
         cameraProperties.setLatencyStdDevMs(5);
 
-		photonCamera = new PhotonCameraSim(new PhotonCamera(Constants.VisionConstants.CAMERA1_NAME), cameraProperties);
+		photonCamera = new PhotonCameraSim(new PhotonCamera(Constants.VisionConstants.CAMERA0_NAME), cameraProperties);
         visionSystem = new VisionSystemSim("main");
         visionSystem.addCamera(photonCamera, Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
         visionSystem.addAprilTags(Constants.VisionConstants.APRIL_TAG_FIELD_LAYOUT);

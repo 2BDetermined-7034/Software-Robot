@@ -56,10 +56,10 @@ public final class Constants {
 	}
 
 	public static class VisionConstants {
-		public static final String CAMERA1_NAME = "photovision";
+		public static final String CAMERA0_NAME = "arducam0";
 		public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.k2024Crescendo
 				.loadAprilTagLayoutField();
-		public static final Transform3d ROBOT_TO_CAMERA_TRANSFORM = new Transform3d(new Translation3d(),
+		public static final Transform3d ROBOT_TO_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.36, 0, 0),
 				new Rotation3d(0, 0, 0));
 	}
 }
