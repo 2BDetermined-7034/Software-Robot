@@ -10,7 +10,7 @@ public class AprilTagFieldLayoutLoader {
         try {
             return new AprilTagFieldLayout(path);
         } catch (IOException e) {
-            System.out.println("Failed to load field layout: " + path);
+            System.out.println("Failed to load field layout \"" + path + "\": " + e.getMessage());
         }
         return null;
     }

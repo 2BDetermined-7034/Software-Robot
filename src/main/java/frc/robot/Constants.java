@@ -7,16 +7,11 @@ package frc.robot;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Filesystem;
 import swervelib.math.Matter;
-import frc.robot.AprilTagFieldLayoutLoader;
-
-import java.io.IOException;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -35,7 +30,7 @@ public final class Constants {
 	public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
 	public static final Matter CHASSIS = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
 	public static final double LOOP_TIME = 0.13; // s, 20ms + 110ms sprk max velocity lag
-	public static final double MAX_SPEED = Units.feetToMeters(1);
+	public static final double MAX_SPEED = Units.feetToMeters(17);
 	// Maximum speed of the robot in meters per second, used to limit acceleration.
 
 	public static final class AutonConstants {
@@ -63,7 +58,7 @@ public final class Constants {
 		public static final String CAMERA0_NAME = "arducam0";
 		public static final AprilTagFieldLayout APRIL_TAG_FIELD_LAYOUT = AprilTagFields.k2024Crescendo
 				.loadAprilTagLayoutField();
-		public static final AprilTagFieldLayout BUNNY_BOTS_FIELD_LAYOUT = AprilTagFieldLayoutLoader.load(Filesystem.getDeployDirectory() + "/2024-BunnyBots.json");
+		public static final AprilTagFieldLayout BUNNY_BOTS_FIELD_LAYOUT = TagLoader.bunnyBots2024();
 
         public static final Transform3d ROBOT_TO_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.36, 0, 0),
 				new Rotation3d(0, 0, 0));

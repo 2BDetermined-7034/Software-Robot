@@ -214,11 +214,15 @@ public class SwerveSubsystem extends SubsystemBase {
 					translationY.getAsDouble()), 0.8);
 
 			// Make the robot move
-			driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(scaledInputs.getX(), scaledInputs.getY(),
+			driveFieldOriented(
+					swerveDrive.swerveController.getTargetSpeeds(
+					scaledInputs.getX(),
+					scaledInputs.getY(),
 					headingX.getAsDouble(),
 					headingY.getAsDouble(),
 					swerveDrive.getOdometryHeading().getRadians(),
-					swerveDrive.getMaximumVelocity()));
+					swerveDrive.getMaximumVelocity())
+			);
 		});
 	}
 
@@ -230,15 +234,16 @@ public class SwerveSubsystem extends SubsystemBase {
 	 * @param rotation     Rotation as a value between [-1, 1] converted to radians.
 	 * @return Drive command.
 	 */
-	public Command simDriveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier rotation) {
-		// swerveDrive.setHeadingCorrection(true); // Normally you would want heading correction for this kind of control.
+	public Command simDriveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX) {
 		return run(() -> {
 			// Make the robot move
-			driveFieldOriented(swerveDrive.swerveController.getTargetSpeeds(translationX.getAsDouble(),
-					translationY.getAsDouble(),
-					rotation.getAsDouble() * Math.PI,
-					swerveDrive.getOdometryHeading().getRadians(),
-					swerveDrive.getMaximumVelocity()));
+			swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
+							translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
+							translationY.getAsDouble() * swerveDrive.getMaximumVelocity()), 0.8),
+					Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
+					false,
+					false
+			);
 		});
 	}
 
@@ -280,11 +285,12 @@ public class SwerveSubsystem extends SubsystemBase {
 		return run(() -> {
 			// Make the robot move
 			swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
-							translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
-							translationY.getAsDouble() * swerveDrive.getMaximumVelocity()), 0.8),
+					translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
+					translationY.getAsDouble() * swerveDrive.getMaximumVelocity()), 0.8),
 					Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
 					true,
-					false);
+					false
+			);
 		});
 	}
 

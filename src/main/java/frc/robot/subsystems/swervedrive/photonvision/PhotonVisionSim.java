@@ -30,9 +30,9 @@ public class PhotonVisionSim implements PhotonSubsystem {
 		photonCamera = new PhotonCameraSim(new PhotonCamera(Constants.VisionConstants.CAMERA0_NAME), cameraProperties);
         visionSystem = new VisionSystemSim("main");
         visionSystem.addCamera(photonCamera, Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
-        visionSystem.addAprilTags(Constants.VisionConstants.APRIL_TAG_FIELD_LAYOUT);
+        visionSystem.addAprilTags(Constants.VisionConstants.BUNNY_BOTS_FIELD_LAYOUT);
 
-		photonPoseEstimator = new PhotonPoseEstimator(Constants.VisionConstants.APRIL_TAG_FIELD_LAYOUT, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera.getCamera(), Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
+		photonPoseEstimator = new PhotonPoseEstimator(Constants.VisionConstants.BUNNY_BOTS_FIELD_LAYOUT, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera.getCamera(), Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
         photonCamera.enableRawStream(true);
         photonCamera.enableProcessedStream(true);
         photonCamera.enableDrawWireframe(true);

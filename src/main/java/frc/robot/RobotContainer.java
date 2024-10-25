@@ -83,18 +83,20 @@ public class RobotContainer {
 		// controls are front-left positive
 		// left stick controls translation
 		// right stick controls the angular velocity of the robot
-		Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
+		Command driveFieldOrientedAngularVelocity = drivebase.driveCommand(
 				() -> MathUtil.applyDeadband(-driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
 				() -> MathUtil.applyDeadband(-driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-				() -> driverController.getRightX() * -0.5);
+				() -> driverController.getRightX() * -0.5
+		);
 
-		Command driveFieldOrientedAnglularVelocitySim = drivebase.simDriveCommand(
-				() -> MathUtil.applyDeadband(driverController.getLeftY() * 3.0, OperatorConstants.LEFT_Y_DEADBAND),
-				() -> MathUtil.applyDeadband(driverController.getLeftX() * 3.0, OperatorConstants.LEFT_X_DEADBAND),
-				() -> MathUtil.applyDeadband(driverController.getRawAxis(2), OperatorConstants.RIGHT_X_DEADBAND));
+		Command driveFieldOrientedAngularVelocitySim = drivebase.simDriveCommand(
+				() -> MathUtil.applyDeadband(-driverController.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+				() -> MathUtil.applyDeadband(-driverController.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+				() -> driverController.getRightX() * -0.5
+		);
 
 		drivebase.setDefaultCommand(
-				RobotBase.isSimulation() ? driveFieldOrientedAnglularVelocitySim : driveFieldOrientedAnglularVelocity);
+				RobotBase.isSimulation() ? driveFieldOrientedAngularVelocitySim : driveFieldOrientedAngularVelocity);
 	}
 
 	/**
