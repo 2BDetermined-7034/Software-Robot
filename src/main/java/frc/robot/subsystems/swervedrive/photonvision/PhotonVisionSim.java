@@ -1,7 +1,10 @@
 package frc.robot.subsystems.swervedrive.photonvision;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -53,4 +56,34 @@ public class PhotonVisionSim implements PhotonSubsystem {
     public void update(Pose2d robotPose) {
         visionSystem.update(robotPose);
     }
+
+	public Optional<Transform2d> getBestTagOffset() {
+		if (photonCamera.getCamera().getLatestResult().hasTargets())
+			return Optional.empty();
+
+		Transform3d transform = photonCamera.getCamera().getLatestResult().getBestTarget().getBestCameraToTarget();
+
+		return Optional.of(new Transform2d(transform.getX(), transform.getY(), transform.getRotation().toRotation2d()));
+	}
+
+	public Optional<Transform2d> getBestTagOffset(ArrayList<Integer> filterOut) {
+		if (photonCamera.getCamera().getLatestResult().hasTargets())
+			return Optional.empty();
+
+		var validTransforms = photonCamera.getCamera().getLatestResult().getTargets().stream().filter((t) -> {
+			for (var i: filterOut) {
+				if (i == t.getFiducialId()) {
+					return false;
+				}
+			}
+
+			return true;
+		}).toList();
+
+		if (validTransforms.isEmpty())
+			return Optional.empty();
+
+		Transform3d result = validTransforms.get(0).getBestCameraToTarget();
+		return Optional.of(new Transform2d(result.getX(), result.getY(), result.getRotation().toRotation2d()));
+	}
 }
