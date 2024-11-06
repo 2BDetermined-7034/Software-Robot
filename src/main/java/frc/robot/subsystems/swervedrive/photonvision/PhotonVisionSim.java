@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swervedrive.photonvision;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Transform2d;
@@ -16,9 +17,10 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.Constants;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class PhotonVisionSim implements PhotonSubsystem {
-	private final PhotonPoseEstimator photonPoseEstimator;
+	private PhotonPoseEstimator photonPoseEstimator;
 	private PhotonCameraSim photonCamera;
     private VisionSystemSim visionSystem;
 
@@ -33,9 +35,9 @@ public class PhotonVisionSim implements PhotonSubsystem {
 		photonCamera = new PhotonCameraSim(new PhotonCamera(Constants.VisionConstants.CAMERA0_NAME), cameraProperties);
         visionSystem = new VisionSystemSim("main");
         visionSystem.addCamera(photonCamera, Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
-        visionSystem.addAprilTags(Constants.VisionConstants.BUNNY_BOTS_FIELD_LAYOUT);
+        //visionSystem.addAprilTags(Constants.VisionConstants.BUNNY_BOTS_FIELD_LAYOUT);
 
-		photonPoseEstimator = new PhotonPoseEstimator(Constants.VisionConstants.BUNNY_BOTS_FIELD_LAYOUT, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera.getCamera(), Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
+		//photonPoseEstimator = new PhotonPoseEstimator(Constants.VisionConstants.BUNNY_BOTS_FIELD_LAYOUT, PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera.getCamera(), Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
         photonCamera.enableRawStream(true);
         photonCamera.enableProcessedStream(true);
         photonCamera.enableDrawWireframe(true);
@@ -57,6 +59,14 @@ public class PhotonVisionSim implements PhotonSubsystem {
         visionSystem.update(robotPose);
     }
 
+	public List<PhotonTrackedTarget> getTargetList() {
+		return getPipelineResult().getTargets();
+	}
+
+	public List<PhotonTrackedTarget> getFilteredTargetList(List<Integer> includeByID) {
+		return getTargetList().stream().filter(target -> includeByID.contains(target.getFiducialId())).toList();
+	}
+
 	public Optional<Transform2d> getBestTagOffset() {
 		if (photonCamera.getCamera().getLatestResult().hasTargets())
 			return Optional.empty();
@@ -66,12 +76,12 @@ public class PhotonVisionSim implements PhotonSubsystem {
 		return Optional.of(new Transform2d(transform.getX(), transform.getY(), transform.getRotation().toRotation2d()));
 	}
 
-	public Optional<Transform2d> getBestTagOffset(ArrayList<Integer> filterOut) {
+	public Optional<Transform2d> getBestTagOffset(List<Integer> filterIn) {
 		if (photonCamera.getCamera().getLatestResult().hasTargets())
 			return Optional.empty();
 
 		var validTransforms = photonCamera.getCamera().getLatestResult().getTargets().stream().filter((t) -> {
-			for (var i: filterOut) {
+			for (var i: filterIn) {
 				if (i == t.getFiducialId()) {
 					return false;
 				}

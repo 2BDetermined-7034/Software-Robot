@@ -8,10 +8,10 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import edu.wpi.first.math.geometry.Pose2d;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import javax.swing.text.html.Option;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PhotonVisionReal implements PhotonSubsystem {
@@ -39,9 +39,16 @@ public class PhotonVisionReal implements PhotonSubsystem {
 
 	}
 
+	public List<PhotonTrackedTarget> getTargetList() {
+		return getPipelineResult().getTargets();
+	}
+
+	public List<PhotonTrackedTarget> getFilteredTargetList(List<Integer> includeByID) {
+		return getTargetList().stream().filter(target -> includeByID.contains(target.getFiducialId())).toList();
+	}
+
 	public Optional<Transform2d> getBestTagOffset() {
-		if (photonCamera.getLatestResult().hasTargets())
-			return Optional.empty();
+		if (!photonCamera.getLatestResult().hasTargets()) return Optional.empty();
 
 		Transform3d transform = photonCamera.getLatestResult().getBestTarget().getBestCameraToTarget();
 
@@ -50,27 +57,21 @@ public class PhotonVisionReal implements PhotonSubsystem {
 
 	/**
 	 * @TODO Add a second filter to 'validTransforms' to select best tag.
-	 * @param filterOut
+	 * @param filterIn
 	 * @return
 	 */
-	public Optional<Transform2d> getBestTagOffset(ArrayList<Integer> filterOut) {
-		if (photonCamera.getLatestResult().hasTargets())
+	public Optional<Transform2d> getBestTagOffset(List<Integer> filterIn) {
+		if (!photonCamera.getLatestResult().hasTargets())
 			return Optional.empty();
 
-		var validTransforms = photonCamera.getLatestResult().getTargets().stream().filter((t) -> {
-			for (var i: filterOut) {
-				if (i == t.getFiducialId()) {
-					return false;
-				}
-			}
+		List<PhotonTrackedTarget> toteTagList = getFilteredTargetList(filterIn);
 
-			return true;
-		}).toList();
-
-		if (validTransforms.isEmpty())
+		if (toteTagList.isEmpty())
 			return Optional.empty();
 
-		Transform3d result = validTransforms.get(0).getBestCameraToTarget();
+		Transform3d result = toteTagList.get(0).getBestCameraToTarget();
 		return Optional.of(new Transform2d(result.getX(), result.getY(), result.getRotation().toRotation2d()));
 	}
+
+
 }

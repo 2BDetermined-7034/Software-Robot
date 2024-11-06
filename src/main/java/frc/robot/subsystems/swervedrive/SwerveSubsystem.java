@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,11 +29,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.AutonConstants;
+import frc.robot.SubsystemLogging;
 import frc.robot.subsystems.swervedrive.photonvision.PhotonSubsystem;
 import frc.robot.subsystems.swervedrive.photonvision.PhotonVisionReal;
 import frc.robot.subsystems.swervedrive.photonvision.PhotonVisionSim;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import frc.robot.RobotContainer;
@@ -50,7 +53,7 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
-public class SwerveSubsystem extends SubsystemBase {
+public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 
 	/**
 	 * Swerve drive object.
@@ -73,7 +76,7 @@ public class SwerveSubsystem extends SubsystemBase {
 		if (RobotBase.isReal()) {
 			photonVision = new PhotonVisionReal();
 		} else {
-			photonVision = new PhotonVisionSim();
+			photonVision = new PhotonVisionReal();
 		}
 
 		// Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
@@ -116,7 +119,7 @@ public class SwerveSubsystem extends SubsystemBase {
 		swerveDrive = new SwerveDrive(driveCfg, controllerCfg, Constants.MAX_SPEED);
 	}
 
-	public Transform2d getBestTagOffset() {
+	public Optional<Transform2d> getBestTagOffset() {
 		return photonVision.getBestTagOffset();
 	}
 
@@ -232,7 +235,6 @@ public class SwerveSubsystem extends SubsystemBase {
 	 *
 	 * @param translationX Translation in the X direction.
 	 * @param translationY Translation in the Y direction.
-	 * @param rotation     Rotation as a value between [-1, 1] converted to radians.
 	 * @return Drive command.
 	 */
 	public Command simDriveCommand(DoubleSupplier translationX, DoubleSupplier translationY, DoubleSupplier angularRotationX) {
@@ -337,12 +339,21 @@ public class SwerveSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 		processVisionMeasurement();
+		updateLogging();
 	}
 
 	@Override
 	public void simulationPeriodic() {
 		processVisionMeasurement();
 		photonVision.update(getPose());
+		updateLogging();
+	}
+
+	private void updateLogging() {
+		Optional<Transform2d> bestTagOffset = photonVision.getBestTagOffset(Constants.VisionConstants.TOTE_TAG_FILTER);
+		if (bestTagOffset.isPresent()) {
+			log("Vision Best Tote Target Pose", bestTagOffset.get());
+		}
 	}
 
 	/**

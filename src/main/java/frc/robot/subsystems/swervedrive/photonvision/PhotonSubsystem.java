@@ -16,9 +16,11 @@ import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public interface PhotonSubsystem {
 	public PhotonPipelineResult getPipelineResult();
@@ -28,7 +30,9 @@ public interface PhotonSubsystem {
 	public int getBestTagID();
 
 	public void update(Pose2d robotPose);
+	public List<PhotonTrackedTarget> getTargetList();
+	public List<PhotonTrackedTarget> getFilteredTargetList(List<Integer> includeByID);
 
 	public Optional<Transform2d> getBestTagOffset();
-	public Optional<Transform2d> getBestTagOffset(ArrayList<Integer> filter);
+	public Optional<Transform2d> getBestTagOffset(List<Integer> filterIn);
 }
