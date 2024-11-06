@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,6 +35,10 @@ public interface SubsystemLogging {
 	}
 
 	default void log(String key, Transform2d value) {
+		SmartDashboard.putNumberArray(this.getClass().getName() + "/" + key, new double[] { value.getX(), value.getY(), value.getRotation().getDegrees() });
+	}
+
+	default void log(String key, Pose2d value) {
 		SmartDashboard.putNumberArray(this.getClass().getName() + "/" + key, new double[] { value.getX(), value.getY(), value.getRotation().getDegrees() });
 	}
 }

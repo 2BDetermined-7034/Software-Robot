@@ -351,8 +351,9 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 
 	private void updateLogging() {
 		Optional<Transform2d> bestTagOffset = photonVision.getBestTagOffset(Constants.VisionConstants.TOTE_TAG_FILTER);
+		log("Vision best tote target pose is present", bestTagOffset.isPresent());
 		if (bestTagOffset.isPresent()) {
-			log("Vision Best Tote Target Pose", bestTagOffset.get());
+			log("Vision best tote target pose", getPose().transformBy(bestTagOffset.get()));
 		}
 	}
 

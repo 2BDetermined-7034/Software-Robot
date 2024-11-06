@@ -69,6 +69,6 @@ public final class Constants {
 
         public static final Transform3d ROBOT_TO_CAMERA_TRANSFORM = new Transform3d(new Translation3d(0.36, 0, 0),
 				new Rotation3d(0, 0, 0));
-		public static final List<Integer> TOTE_TAG_FILTER = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+		public static final List<Integer> TOTE_TAG_FILTER = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 	}
 }
