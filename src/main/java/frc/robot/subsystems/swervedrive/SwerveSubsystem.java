@@ -12,15 +12,12 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
@@ -32,15 +29,11 @@ import frc.robot.Constants.AutonConstants;
 import frc.robot.SubsystemLogging;
 import frc.robot.subsystems.swervedrive.photonvision.PhotonSubsystem;
 import frc.robot.subsystems.swervedrive.photonvision.PhotonVisionReal;
-import frc.robot.subsystems.swervedrive.photonvision.PhotonVisionSim;
 
 import java.io.File;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
-import frc.robot.RobotContainer;
-
-import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
@@ -119,8 +112,8 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 		swerveDrive = new SwerveDrive(driveCfg, controllerCfg, Constants.MAX_SPEED);
 	}
 
-	public Optional<Transform2d> getBestTagOffset() {
-		return photonVision.getBestTagOffset();
+	public Optional<Transform2d> getBestTagTransform() {
+		return photonVision.getBestTagTransform();
 	}
 
 	/**
@@ -291,7 +284,7 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 					translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
 					translationY.getAsDouble() * swerveDrive.getMaximumVelocity()), 0.8),
 					Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
-					true,
+					false,
 					false
 			);
 		});
@@ -338,22 +331,29 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 
 	@Override
 	public void periodic() {
-		processVisionMeasurement();
+		//processVisionMeasurement();
+		//swerveDrive.updateOdometry();
 		updateLogging();
 	}
 
 	@Override
 	public void simulationPeriodic() {
-		processVisionMeasurement();
-		photonVision.update(getPose());
+		//processVisionMeasurement();
+		//photonVision.update(getPose());
 		updateLogging();
 	}
 
 	private void updateLogging() {
-		Optional<Transform2d> bestTagOffset = photonVision.getBestTagOffset(Constants.VisionConstants.TOTE_TAG_FILTER);
+		Optional<Transform2d> bestTagOffset = photonVision.getBestTagTransform(Constants.VisionConstants.TOTE_TAG_FILTER);
 		log("Vision best tote target pose is present", bestTagOffset.isPresent());
 		if (bestTagOffset.isPresent()) {
 			log("Vision best tote target pose", getPose().transformBy(bestTagOffset.get()));
+		}
+		if (getBestTagTransform().isPresent()) {
+			/**
+			 * TODO: Rotate the transform to face the tag
+			 */
+			log("Destination", getPose().plus(getBestTagTransform().get()));
 		}
 	}
 
@@ -389,7 +389,7 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 	public void processVisionMeasurement() {
 		var estimatedPose = photonVision.getEstimatedPose();
 		if (estimatedPose.isPresent()) {
-			swerveDrive.addVisionMeasurement(estimatedPose.get().estimatedPose.toPose2d(), Timer.getFPGATimestamp());
+			//swerveDrive.addVisionMeasurement(estimatedPose.get().estimatedPose.toPose2d(), Timer.getFPGATimestamp());
 			SmartDashboard.putBoolean("Vision/isPresent", true);
 		} else {
 			SmartDashboard.putBoolean("Vision/isPresent", false);

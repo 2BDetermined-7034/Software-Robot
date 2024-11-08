@@ -1,21 +1,9 @@
 package frc.robot.subsystems.swervedrive.photonvision;
 
-import edu.wpi.first.apriltag.AprilTag;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.simulation.DriverStationSim;
-import frc.robot.Constants;
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +21,6 @@ public interface PhotonSubsystem {
 	public List<PhotonTrackedTarget> getTargetList();
 	public List<PhotonTrackedTarget> getFilteredTargetList(List<Integer> includeByID);
 
-	public Optional<Transform2d> getBestTagOffset();
-	public Optional<Transform2d> getBestTagOffset(List<Integer> filterIn);
+	public Optional<Transform2d> getBestTagTransform();
+	public Optional<Transform2d> getBestTagTransform(List<Integer> filterIn);
 }

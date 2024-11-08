@@ -67,7 +67,7 @@ public class PhotonVisionSim implements PhotonSubsystem {
 		return getTargetList().stream().filter(target -> includeByID.contains(target.getFiducialId())).toList();
 	}
 
-	public Optional<Transform2d> getBestTagOffset() {
+	public Optional<Transform2d> getBestTagTransform() {
 		if (photonCamera.getCamera().getLatestResult().hasTargets())
 			return Optional.empty();
 
@@ -76,7 +76,7 @@ public class PhotonVisionSim implements PhotonSubsystem {
 		return Optional.of(new Transform2d(transform.getX(), transform.getY(), transform.getRotation().toRotation2d()));
 	}
 
-	public Optional<Transform2d> getBestTagOffset(List<Integer> filterIn) {
+	public Optional<Transform2d> getBestTagTransform(List<Integer> filterIn) {
 		if (photonCamera.getCamera().getLatestResult().hasTargets())
 			return Optional.empty();
 

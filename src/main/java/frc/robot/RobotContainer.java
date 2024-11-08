@@ -10,23 +10,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
-import frc.robot.commands.swervedrive.drivebase.PathFindToTag;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import org.photonvision.PhotonCamera;
 
 import java.io.File;
-import java.lang.management.OperatingSystemMXBean;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -128,8 +122,10 @@ public class RobotContainer {
 
 		driverController.triangle().whileTrue(
 				Commands.deferredProxy(() -> {
-					if (drivebase.getBestTagOffset().isPresent()) {
-						return drivebase.driveToPose(drivebase.getPose().plus(drivebase.getBestTagOffset().get()));
+					if (drivebase.getBestTagTransform().isPresent()) {
+						Transform2d tagTransform = drivebase.getBestTagTransform().get();
+
+						return drivebase.driveToPose(drivebase.getPose().plus(new Transform2d(tagTransform.getTranslation(), tagTransform.getRotation().plus(Rotation2d.fromDegrees(180)))));
 					}
 					return null;
 				})

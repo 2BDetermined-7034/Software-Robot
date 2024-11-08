@@ -1,13 +1,11 @@
 package frc.robot.subsystems.swervedrive.photonvision;
 
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.*;
 import frc.robot.Constants;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
-import edu.wpi.first.math.geometry.Pose2d;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import javax.swing.text.html.Option;
@@ -47,7 +45,7 @@ public class PhotonVisionReal implements PhotonSubsystem {
 		return getTargetList().stream().filter(target -> includeByID.contains(target.getFiducialId())).toList();
 	}
 
-	public Optional<Transform2d> getBestTagOffset() {
+	public Optional<Transform2d> getBestTagTransform() {
 		if (!photonCamera.getLatestResult().hasTargets()) return Optional.empty();
 
 		Transform3d transform = photonCamera.getLatestResult().getBestTarget().getBestCameraToTarget();
@@ -60,7 +58,7 @@ public class PhotonVisionReal implements PhotonSubsystem {
 	 * @param filterIn
 	 * @return
 	 */
-	public Optional<Transform2d> getBestTagOffset(List<Integer> filterIn) {
+	public Optional<Transform2d> getBestTagTransform(List<Integer> filterIn) {
 		if (!photonCamera.getLatestResult().hasTargets())
 			return Optional.empty();
 
