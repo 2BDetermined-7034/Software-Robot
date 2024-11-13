@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.AutonConstants;
@@ -194,6 +195,19 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 	}
 
 	/**
+	 * TODO add tag offset and use photoncamera transform
+	 *
+	 * @return
+	 */
+	public Command pathFindToTote() {
+		Optional<Pose2d> toteDestinationPose = getToteDestinationPose();
+		if(toteDestinationPose.isPresent()) {
+			return driveToPose(toteDestinationPose.get());
+		}
+		return new WaitCommand(4);
+	}
+
+	/**
 	 * Command to drive the robot using translative values and heading as a setpoint.
 	 *
 	 * @param translationX Translation in the X direction. Cubed for smoother controls.
@@ -289,6 +303,15 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 			);
 		});
 	}
+	private Optional<Pose2d> getToteDestinationPose(){
+		Optional<Transform2d> bestTagOffset = photonVision.getBestTagTransform(Constants.VisionConstants.TOTE_TAG_FILTER);
+
+		if(bestTagOffset.isPresent()){
+			Pose2d result = swerveDrive.getPose().plus(bestTagOffset.get());
+			return Optional.of(new Pose2d(new Translation2d(result.getX(), result.getY()), result.getRotation().unaryMinus()));
+		}
+		return Optional.empty();
+	}
 
 	/**
 	 * The primary method for controlling the drivebase.  Takes a {@link Translation2d} and a rotation rate, and
@@ -344,18 +367,11 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 	}
 
 	private void updateLogging() {
-		Optional<Transform2d> bestTagOffset = photonVision.getBestTagTransform(Constants.VisionConstants.TOTE_TAG_FILTER);
-		log("Vision best tote target pose is present", bestTagOffset.isPresent());
-		if (bestTagOffset.isPresent()) {
-			log("Vision best tote target pose", getPose().transformBy(bestTagOffset.get()));
-		}
-		if (getBestTagTransform().isPresent()) {
-			/**
-			 * TODO: Rotate the transform to face the tag
-			 */
-			log("Destination", getPose().plus(getBestTagTransform().get()));
+		if(getBestTagTransform().isPresent()) {
+			log("Tote Pathfind Destination", getBestTagTransform().get());
 		}
 	}
+
 
 	/**
 	 * Get the swerve drive kinematics object.
