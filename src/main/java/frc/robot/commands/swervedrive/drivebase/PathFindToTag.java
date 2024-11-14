@@ -10,6 +10,7 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 public class PathFindToTag {
     /**
      * Command to pathfind to an AprilTag on a Tote
+     * TODO: decide on what to do when destination is not present
      */
     public static Command pathFindToTote(SwerveSubsystem drivebase) {
 		Optional<Pose2d> toteDestinationPose = drivebase.getToteDestinationPose();
