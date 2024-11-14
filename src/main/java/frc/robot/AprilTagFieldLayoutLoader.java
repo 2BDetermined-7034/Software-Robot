@@ -1,9 +1,8 @@
 package frc.robot;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.wpilibj.Filesystem;
-
 import java.io.IOException;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 
 public class AprilTagFieldLayoutLoader {
     public static AprilTagFieldLayout load(String path) {

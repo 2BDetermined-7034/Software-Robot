@@ -34,7 +34,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.AutonConstants;
@@ -58,12 +57,6 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
      */
     private final SwerveDrive swerveDrive;
     private PhotonSubsystem photonVision;
-    /**
-     * AprilTag field layout.
-     */
-
-    // :3
-    private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
     /**
      * Initialize {@link SwerveDrive} with the directory provided.
@@ -165,6 +158,7 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
     /**
      * @deprecated leftover from a YAGSL-Example commit
      */
+    @Deprecated
     public Command aimAtTarget(PhotonCamera camera) {
 
         return run(() -> {
@@ -383,6 +377,10 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
         swerveDrive.drive(velocity);
     }
 
+    /**
+     * periodic function meant for either logging vision measurements or telemetry
+     * enable/disable both here
+     */
     @Override
     public void periodic() {
         // processVisionMeasurement();
