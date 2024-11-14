@@ -18,8 +18,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -40,6 +38,7 @@ import frc.robot.Constants.AutonConstants;
 import frc.robot.SubsystemLogging;
 import frc.robot.subsystems.swervedrive.photonvision.PhotonSubsystem;
 import frc.robot.subsystems.swervedrive.photonvision.PhotonVisionReal;
+import frc.robot.subsystems.swervedrive.photonvision.PhotonVisionSim;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -64,10 +63,11 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
      * @param directory Directory of swerve drive config files.
      */
     public SwerveSubsystem(File directory) {
+
         if (RobotBase.isReal()) {
             photonVision = new PhotonVisionReal();
         } else {
-            photonVision = new PhotonVisionReal();
+            photonVision = new PhotonVisionSim();
         }
 
         // Angle conversion factor is 360 / (GEAR RATIO * ENCODER RESOLUTION)
