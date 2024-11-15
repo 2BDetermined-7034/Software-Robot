@@ -69,6 +69,11 @@
           },
           "open": true
         },
+        "frc.robot.subsystems.swervedrive.SwerveSubsystem": {
+          "double[]##v_/SmartDashboard/frc.robot.subsystems.swervedrive.SwerveSubsystem/Test Destination": {
+            "open": true
+          }
+        },
         "open": true
       }
     }

@@ -116,7 +116,7 @@ public class RobotContainer {
         driverController.circle().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
         driverController.square().whileTrue(
                 drivebase.driveToPose(
-                        new Pose2d(new Translation2d(1, 1), Rotation2d.fromDegrees(0))));
+                        new Pose2d(new Translation2d(4, 7), Rotation2d.fromDegrees(40))));
 
         // driverController.triangle().whileTrue(
         // Commands.deferredProxy(() -> {

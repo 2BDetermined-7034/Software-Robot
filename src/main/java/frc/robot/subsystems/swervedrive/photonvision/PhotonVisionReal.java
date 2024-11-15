@@ -54,6 +54,11 @@ public class PhotonVisionReal implements PhotonSubsystem {
         return getTargetList().stream().filter(target -> includeByID.contains(target.getFiducialId())).toList();
     }
 
+    /**
+     * Get the camera to AprilTag transformation of the best target
+     *
+     * @return 
+     */
     @Override
     public Optional<Transform2d> getBestTagTransform() {
         if (!photonCamera.getLatestResult().hasTargets())
@@ -65,6 +70,8 @@ public class PhotonVisionReal implements PhotonSubsystem {
     }
 
     /**
+     * Get the camera to AprilTag Transformation of the best apriltag target from a filtered list of fiducial IDs
+     *
      * @param includeByID filter for tags
      * @return
      */

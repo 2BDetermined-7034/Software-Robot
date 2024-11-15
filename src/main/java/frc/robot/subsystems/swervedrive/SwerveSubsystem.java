@@ -395,7 +395,7 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
     @Override
     public void simulationPeriodic() {
         // processVisionMeasurement();
-        // photonVision.update(getPose());
+        photonVision.update(getPose());
         updateLoggingSim();
     }
 
@@ -407,7 +407,9 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
     }
 
     private void updateLoggingSim() {
-
+        if (getBestTagTransform().isPresent()) {
+            log("Tote Pathfind Destination", getBestTagTransform().get());
+        }
     }
 
     /**
