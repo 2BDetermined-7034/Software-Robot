@@ -82,8 +82,9 @@ public class PhotonVisionSim implements PhotonSubsystem {
 
     @Override
     public Optional<Transform2d> getBestTagTransform() {
-        if (photonCamera.getCamera().getLatestResult().hasTargets())
+        if (!photonCamera.getCamera().getLatestResult().hasTargets()) {
             return Optional.empty();
+        }
 
         Transform3d transform = photonCamera.getCamera().getLatestResult().getBestTarget().getBestCameraToTarget();
 

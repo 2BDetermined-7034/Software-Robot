@@ -317,9 +317,9 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 
     /**
      * Get the destination pose on request to pathfind to a tote Apriltag
-     * TODO:
-     * 1. set an offset for the destination pose to prevent collisions with the
-     * apriltag
+     * TODO: 1. set an offset for the destination pose to prevent collisions with
+     * the apriltag
+     *
      */
     public Optional<Pose2d> getToteDestinationPose() {
         Optional<Transform2d> bestTagOffset = photonVision
@@ -396,7 +396,7 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
     public void simulationPeriodic() {
         // processVisionMeasurement();
         // photonVision.update(getPose());
-        updateLogging();
+        updateLoggingSim();
     }
 
     private void updateLogging() {
@@ -404,6 +404,10 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
             log("Tote Pathfind Destination", getBestTagTransform().get());
         }
         log("Test Destination", new Pose2d(new Translation2d(1, 1), Rotation2d.fromDegrees(0)));
+    }
+
+    private void updateLoggingSim() {
+
     }
 
     /**
