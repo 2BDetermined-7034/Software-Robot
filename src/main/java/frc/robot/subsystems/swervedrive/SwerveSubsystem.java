@@ -117,6 +117,10 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
         swerveDrive = new SwerveDrive(driveCfg, controllerCfg, Constants.MAX_SPEED);
     }
 
+    public PhotonSubsystem getPhotonVision() {
+        return photonVision;
+    }
+
     public Optional<Transform2d> getBestTagTransform() {
         return photonVision.getBestTagTransform();
     }
@@ -399,6 +403,7 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
         if (getBestTagTransform().isPresent()) {
             log("Tote Pathfind Destination", getBestTagTransform().get());
         }
+        log("Test Destination", new Pose2d(new Translation2d(1, 1), Rotation2d.fromDegrees(0)));
     }
 
     /**

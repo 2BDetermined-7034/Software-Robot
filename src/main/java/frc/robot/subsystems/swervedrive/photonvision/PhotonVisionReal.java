@@ -78,8 +78,10 @@ public class PhotonVisionReal implements PhotonSubsystem {
         if (toteTagList.isEmpty())
             return Optional.empty();
 
-        // TODO: Add a second filter to 'validTransforms' to select best tag.
-        Transform3d result = toteTagList.get(0).getBestCameraToTarget();
+        // TODO: Add a second filter to 'validTransforms' to select best target.
+        PhotonTrackedTarget bestTarget = toteTagList.get(0);
+        Transform3d result = bestTarget.getBestCameraToTarget();
+        double targetYaw = bestTarget.getYaw();
         return Optional.of(new Transform2d(result.getX(), result.getY(), result.getRotation().toRotation2d()));
     }
 
