@@ -20,7 +20,7 @@ public class PathFindToTag {
 		if(toteDestinationPose.isPresent()) {
 			return drivebase.driveToPose(toteDestinationPose.get()); //
 		}
-		return new WaitCommand(4);
+		return new WaitCommand(0.5);
 		//Is this an auto-exclusive function?
 		//We could pass in a dummy pose, and then somehow signal it in Smartdashboard / Advantage Kit
     }

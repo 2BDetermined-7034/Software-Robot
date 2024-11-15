@@ -57,7 +57,7 @@ public class PhotonVisionReal implements PhotonSubsystem {
     /**
      * Get the camera to AprilTag transformation of the best target
      *
-     * @return 
+     * @return
      */
     @Override
     public Optional<Transform2d> getBestTagTransform() {
@@ -70,7 +70,8 @@ public class PhotonVisionReal implements PhotonSubsystem {
     }
 
     /**
-     * Get the camera to AprilTag Transformation of the best apriltag target from a filtered list of fiducial IDs
+     * Get the camera to AprilTag Transformation of the best apriltag target from a
+     * filtered list of fiducial IDs
      *
      * @param includeByID filter for tags
      * @return
@@ -91,5 +92,4 @@ public class PhotonVisionReal implements PhotonSubsystem {
         double targetYaw = bestTarget.getYaw();
         return Optional.of(new Transform2d(result.getX(), result.getY(), result.getRotation().toRotation2d()));
     }
-
 }

@@ -51,28 +51,37 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/VisionSystemSim-main/Sim Field": {
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
       }
     }
   },
   "NetworkTables": {
     "transitory": {
-      "FMSInfo": {
-        "open": true
-      },
       "SmartDashboard": {
-        "Swerve Drive": {
-          "open": true
-        },
         "VisionSystemSim-main": {
           "Sim Field": {
+            "double[]##v_/SmartDashboard/VisionSystemSim-main/Sim Field/Robot": {
+              "open": true
+            },
             "open": true
           },
           "open": true
         },
         "frc.robot.subsystems.swervedrive.SwerveSubsystem": {
-          "double[]##v_/SmartDashboard/frc.robot.subsystems.swervedrive.SwerveSubsystem/Test Destination": {
+          "double[]##v_/SmartDashboard/frc.robot.subsystems.swervedrive.SwerveSubsystem/Tote Pathfind Destination": {
             "open": true
-          }
+          },
+          "open": true
         },
         "open": true
       }

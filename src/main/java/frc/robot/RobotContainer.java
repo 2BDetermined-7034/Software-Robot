@@ -113,11 +113,11 @@ public class RobotContainer {
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
         //
         driverController.cross().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-        driverController.circle().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-        driverController.square().whileTrue(
-                drivebase.driveToPose(
-                        new Pose2d(new Translation2d(4, 7), Rotation2d.fromDegrees(40))));
-
+        // driverController.circle().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+        // driverController.square().whileTrue(
+        //         drivebase.driveToPose(
+        //                 new Pose2d(new Translation2d(4, 7), Rotation2d.fromDegrees(40))));
+        //
         // driverController.triangle().whileTrue(
         // Commands.deferredProxy(() -> {
         // if (drivebase.getBestTagTransform().isPresent()) {
@@ -134,7 +134,7 @@ public class RobotContainer {
         // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock,
         // drivebase).repeatedly());
 
-        driverController.triangle().whileTrue(PathFindToTag.pathFindToTote(drivebase));
+        driverController.square().whileTrue(PathFindToTag.pathFindToTote(drivebase));
 
     }
 
