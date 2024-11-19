@@ -59,6 +59,11 @@ public class PhotonVisionSim implements PhotonSubsystem {
     }
 
     @Override
+    public boolean hasTargets() {
+        return getPipelineResult().hasTargets();
+    }
+
+    @Override
     public Optional<EstimatedRobotPose> getEstimatedPose() {
         return photonPoseEstimator.update();
     }
@@ -85,36 +90,5 @@ public class PhotonVisionSim implements PhotonSubsystem {
     @Override
     public List<PhotonTrackedTarget> getFilteredTargetList(List<Integer> includeByID) {
         return getTargetList().stream().filter(target -> includeByID.contains(target.getFiducialId())).toList();
-    }
-
-    @Override
-    public Optional<Transform2d> getBestTagTransform() {
-        if (!getPipelineResult().hasTargets()) {
-            return Optional.empty();
-        }
-
-        Transform3d transform = photonCamera.getCamera().getLatestResult().getBestTarget().getBestCameraToTarget();
-
-        return Optional.of(new Transform2d(transform.getX(), transform.getY(), transform.getRotation().toRotation2d()));
-    }
-
-    /**
-     * @deprecated too different from PhotonVisionReal
-     */
-    @Override
-    public Optional<Transform2d> getBestTagTransform(List<Integer> includeByID) {
-        // if (!getPipelineResult().hasTargets())
-        //     return Optional.empty();
-
-        List<PhotonTrackedTarget> toteTagList = getFilteredTargetList(includeByID);
-
-        if (toteTagList.isEmpty())
-            return Optional.empty();
-
-        // TODO: Add a second filter to 'validTransforms' to select best target.
-        PhotonTrackedTarget bestTarget = toteTagList.get(0);
-        Transform3d result = bestTarget.getBestCameraToTarget();
-        double targetYaw = bestTarget.getYaw();
-        return Optional.of(new Transform2d(result.getX(), result.getY(), result.getRotation().toRotation2d()));
-    }
+    } 
 }

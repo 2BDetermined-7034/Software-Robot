@@ -8,13 +8,17 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform2d;
 
 /**
  * interface for our custom photonvision methods
  */
 public interface PhotonSubsystem {
     public PhotonPipelineResult getPipelineResult();
+
+    /**
+     * @return whether photonvision sees a current in the current rio cycle
+     */
+    public boolean hasTargets();
 
     public Optional<EstimatedRobotPose> getEstimatedPose();
 
@@ -31,14 +35,4 @@ public interface PhotonSubsystem {
      * @return list of vision vision targets with an inclusive filter
      */
     public List<PhotonTrackedTarget> getFilteredTargetList(List<Integer> includeByID);
-
-    /**
-     * @return Transform2d to the least ambiguous apriltag target
-     */
-    public Optional<Transform2d> getBestTagTransform();
-
-    /**
-     * @return Transform2d to the least ambiguous apriltag target wtihin the filter
-     */
-    public Optional<Transform2d> getBestTagTransform(List<Integer> filterIn);
 }

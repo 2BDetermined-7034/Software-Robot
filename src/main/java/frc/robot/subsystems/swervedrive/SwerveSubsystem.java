@@ -5,11 +5,13 @@
 package frc.robot.subsystems.swervedrive;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -21,6 +23,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -35,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.AutonConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.SubsystemLogging;
 import frc.robot.subsystems.swervedrive.photonvision.PhotonSubsystem;
 import frc.robot.subsystems.swervedrive.photonvision.PhotonVisionReal;
@@ -119,10 +123,6 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 
     public PhotonSubsystem getPhotonVision() {
         return photonVision;
-    }
-
-    public Optional<Transform2d> getBestTagTransform() {
-        return photonVision.getBestTagTransform();
     }
 
     /**
@@ -322,15 +322,24 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
      *
      */
     public Optional<Pose2d> getToteDestinationPose() {
-        Optional<Transform2d> bestTagOffset = photonVision
-                .getBestTagTransform(Constants.VisionConstants.TOTE_TAG_FILTER);
-
-        if (bestTagOffset.isPresent()) {
-            Pose2d result = swerveDrive.getPose().plus(bestTagOffset.get());
-            return Optional
-                    .of(new Pose2d(new Translation2d(result.getX(), result.getY()), result.getRotation().unaryMinus()));
+        if (!photonVision.hasTargets()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+
+        List<PhotonTrackedTarget> toteTagList = photonVision.getFilteredTargetList(VisionConstants.TOTE_TAG_FILTER);
+
+        if (toteTagList.isEmpty())
+            return Optional.empty();
+
+        // TODO: Add a second filter to 'validTransforms' to select best target.
+        PhotonTrackedTarget bestTarget = toteTagList.get(0);
+        Transform3d camToTargetTransform = bestTarget.getBestCameraToTarget();
+        // double targetYaw = bestTarget.getYaw();
+        Transform2d bestTagOffset = new Transform2d(camToTargetTransform.getX(), camToTargetTransform.getY(), camToTargetTransform.getRotation().toRotation2d());
+
+        Pose2d result = swerveDrive.getPose().plus(bestTagOffset);
+        return Optional
+                .of(new Pose2d(new Translation2d(result.getX(), result.getY()), result.getRotation().unaryMinus()));
     }
 
     /**
