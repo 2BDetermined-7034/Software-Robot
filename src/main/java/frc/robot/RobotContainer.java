@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -114,10 +116,10 @@ public class RobotContainer {
         //
         driverController.cross().onTrue((Commands.runOnce(drivebase::zeroGyro)));
         // driverController.circle().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-        // driverController.square().whileTrue(
-        //         drivebase.driveToPose(
-        //                 new Pose2d(new Translation2d(4, 7), Rotation2d.fromDegrees(40))));
-        //
+//        driverController.square().whileTrue(
+//                 drivebase.driveToPose(
+//                         new Pose2d(new Translation2d(4, 7), Rotation2d.fromDegrees(40))));
+
         // driverController.triangle().whileTrue(
         // Commands.deferredProxy(() -> {
         // if (drivebase.getBestTagTransform().isPresent()) {
@@ -134,7 +136,7 @@ public class RobotContainer {
         // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock,
         // drivebase).repeatedly());
 
-        driverController.square().whileTrue(PathFindToTag.pathFindToTote(drivebase));
+        driverController.square().whileTrue(PathFindToTag.pathFindToTag(drivebase));
 
     }
 

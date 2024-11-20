@@ -40,8 +40,9 @@ public class PhotonVisionSim implements PhotonSubsystem {
         visionSystem.addCamera(photonCamera, Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
         // visionSystem.addAprilTags(Constants.VisionConstants.BUNNY_BOTS_FIELD_LAYOUT);
 
-        VisionTargetSim totePathfindSimTarget = new VisionTargetSim(new Pose3d(16, 4, 0.2, new Rotation3d(0, 0, Math.PI)), TargetModel.kAprilTag36h11, 3);
-        visionSystem.addVisionTargets("totes", totePathfindSimTarget);
+        VisionTargetSim tote0 = new VisionTargetSim(new Pose3d(16, 4, 0.2, new Rotation3d(0, 0, Math.PI)), TargetModel.kAprilTag36h11, 3);
+        VisionTargetSim tote1 = new VisionTargetSim(new Pose3d(8, 4, 0.2, new Rotation3d(0, 0, Math.PI)), TargetModel.kAprilTag36h11, 4);
+        visionSystem.addVisionTargets("totes", tote0, tote1);
 
         // photonPoseEstimator = new
         // PhotonPoseEstimator(Constants.VisionConstants.BUNNY_BOTS_FIELD_LAYOUT,
