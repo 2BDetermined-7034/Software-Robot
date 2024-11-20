@@ -397,7 +397,7 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
     @Override
     public void periodic() {
         // processVisionMeasurement();
-        // swerveDrive.updateOdometry();
+        swerveDrive.updateOdometry();
         updateLogging();
     }
 
@@ -409,15 +409,17 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
     }
 
     private void updateLogging() {
-        if (getToteDestinationPose().isPresent()) {
-            log("Tote Pathfind Destination", getToteDestinationPose().get());
+        var tote = getToteDestinationPose();
+        if (tote.isPresent()) {
+            log("Tote Pathfind Destination", tote.get());
         }
         log("Test Destination", new Pose2d(new Translation2d(1, 1), Rotation2d.fromDegrees(0)));
     }
 
     private void updateLoggingSim() {
-        if (getToteDestinationPose().isPresent()) {
-            log("Tote Pathfind Destination", getToteDestinationPose().get());
+        var tote = getToteDestinationPose();
+        if (tote.isPresent()) {
+            log("Tote Pathfind Destination", tote.get());
         }
     }
 
