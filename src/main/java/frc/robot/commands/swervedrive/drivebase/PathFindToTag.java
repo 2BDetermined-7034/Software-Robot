@@ -23,9 +23,11 @@ public class PathFindToTag {
 		requirements.add(swerve);
 		return Commands.defer(
 			() -> {
+				SmartDashboard.putBoolean("Pathfinding running?", true);
 				Optional<Pose2d> toteDestinationPose = swerve.getToteDestinationPose();
 				if(toteDestinationPose.isPresent()) {
-					return swerve.driveToPose(toteDestinationPose.get());
+					return swerve.driveToPose(toteDestinationPose.get()).andThen(
+							new InstantCommand(() -> SmartDashboard.putBoolean("Pathfinding running?", false)));
 				}
 				return Commands.none();
 			},

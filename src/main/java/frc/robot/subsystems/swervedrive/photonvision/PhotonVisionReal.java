@@ -15,14 +15,14 @@ import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.Constants;
 
 public class PhotonVisionReal implements PhotonSubsystem {
-    private final PhotonPoseEstimator photonPoseEstimator;
+    private final PhotonPoseEstimator photonPoseEstimator = null;
     private PhotonCamera photonCamera;
 
     public PhotonVisionReal() {
         photonCamera = new PhotonCamera(Constants.VisionConstants.CAMERA0_NAME);
-        photonPoseEstimator = new PhotonPoseEstimator(Constants.VisionConstants.APRIL_TAG_FIELD_LAYOUT,
-                PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
-                Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
+//        photonPoseEstimator = new PhotonPoseEstimator(Constants.VisionConstants.APRIL_TAG_FIELD_LAYOUT,
+//                PhotonPoseEstimator.PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
+//                Constants.VisionConstants.ROBOT_TO_CAMERA_TRANSFORM);
     }
 
     @Override
