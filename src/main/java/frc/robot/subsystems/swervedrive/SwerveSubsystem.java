@@ -316,7 +316,7 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
     }
 
     /**
-     * Get the destination pose on request to pathfind to a tote Apriltag
+     * Get the destination pose on request to pathfind to a tote filtered Apriltag
      * TODO: 1. set an offset for the destination pose to prevent collisions with
      * the apriltag
      *
@@ -334,12 +334,13 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
         // TODO: Add a second filter to 'validTransforms' to select best target.
         PhotonTrackedTarget bestTarget = toteTagList.get(0);
         Transform3d camToTargetTransform = bestTarget.getBestCameraToTarget();
+        Transform3d robotToTargetTransform = VisionConstants.ROBOT_TO_CAMERA_TRANSFORM.plus(camToTargetTransform);
         // double targetYaw = bestTarget.getYaw();
-        Transform2d bestTagOffset = new Transform2d(camToTargetTransform.getX(), camToTargetTransform.getY(), camToTargetTransform.getRotation().toRotation2d());
+        Transform2d bestTagOffset = new Transform2d(robotToTargetTransform.getX(), robotToTargetTransform.getY(), robotToTargetTransform.getRotation().toRotation2d());
 
         Pose2d result = swerveDrive.getPose().plus(bestTagOffset);
         return Optional
-                .of(new Pose2d(new Translation2d(result.getX(), result.getY()), result.getRotation().unaryMinus()));
+                .of(new Pose2d(new Translation2d(result.getX(), result.getY()), result.getRotation().rotateBy(Rotation2d.fromDegrees(180))));
     }
 
     /**
