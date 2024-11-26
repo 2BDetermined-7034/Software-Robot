@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.PathFindToTag;
+import frc.robot.commands.swervedrive.drivebase.PathFindToTagPID;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 /**
@@ -39,7 +40,6 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
             "swerve/neo"));
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -114,7 +114,7 @@ public class RobotContainer {
     private void configureBindings() {
         // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
         //
-        driverController.cross().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+//        driverController.cross().onTrue((Commands.runOnce(drivebase::zeroGyro)));
         // driverController.circle().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
 //        driverController.square().whileTrue(
 //                 drivebase.driveToPose(
@@ -137,6 +137,7 @@ public class RobotContainer {
         // drivebase).repeatedly());
 
         driverController.square().whileTrue(PathFindToTag.pathFindToTag(drivebase));
+        driverController.triangle().whileTrue(Commands.deferredProxy(()-> { return new PathFindToTagPID(drivebase); }));
 
     }
 

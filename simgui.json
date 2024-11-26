@@ -30,6 +30,9 @@
         "header": {
           "open": false
         }
+      },
+      "window": {
+        "visible": false
       }
     }
   },
@@ -66,6 +69,9 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
     "transitory": {
       "SmartDashboard": {
         "VisionSystemSim-main": {
@@ -91,10 +97,16 @@
     }
   },
   "NetworkTables Info": {
+    "Connections": {
+      "open": true
+    },
     "Server": {
       "open": true
     },
     "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
   },
   "Plot": {
     "Plot <0>": {

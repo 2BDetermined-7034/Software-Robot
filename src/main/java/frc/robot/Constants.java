@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.commands.swervedrive.drivebase.PathFindToTagPID;
 import swervelib.math.Matter;
 
 /**
@@ -72,5 +73,11 @@ public final class Constants {
 				new Rotation3d(0, 0, 0));
 		public static final List<Integer> TOTE_TAG_FILTER = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 		public static final double MIN_DISTANCE_FROM_TOTE_METERS = 0.5;
+	}
+
+	public static class PathFindToTagPIDConstants {
+		public static final double PIDX_TOLERANCE = 0.0; //Placeholder values
+		public static final double PIDY_TOLERANCE = 0.0;
+		public static final double PID_ROT_TOLERANCE = 0.0;
 	}
 }
