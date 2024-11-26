@@ -311,7 +311,7 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 							translationX.getAsDouble() * swerveDrive.getMaximumVelocity(),
 							translationY.getAsDouble() * swerveDrive.getMaximumVelocity()), 0.8),
 					Math.pow(angularRotationX.getAsDouble(), 3) * swerveDrive.getMaximumAngularVelocity(),
-					false,
+					true,
 					false);
 		});
 	}
@@ -337,29 +337,30 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 		}
 		log("Tag list has values", true);
 
+		Transform3d cameraToTarget = toteTagList.get(0).getBestCameraToTarget();
+		final Translation2d robotPosition = getPose().getTranslation();
+		final Translation2d robotDirection = new Translation2d(getPose().getRotation().getCos(), getPose().getRotation().getSin());
 
-		for (var i: toteTagList) {
-			Transform3d camToTargetTransform = i.getBestCameraToTarget();
-			Transform3d robotToTargetTransform = VisionConstants.ROBOT_TO_CAMERA_TRANSFORM.plus(camToTargetTransform);
-			Transform2d bestTagOffset = new Transform2d(robotToTargetTransform.getX(), robotToTargetTransform.getY(), robotToTargetTransform.getRotation().toRotation2d());
-			Pose2d result = swerveDrive.getPose().plus(bestTagOffset);
-			log("Tote Destination " + i.getFiducialId(), new Pose2d(new Translation2d(result.getX(), result.getY()), result.getRotation().rotateBy(Rotation2d.fromDegrees(180))));
-		}
-
-		double lowestDistance = 1e10;
-		int closestTag = 0;
+		double bestScore = 0.0;
+		int bestTag = 0;
 		for (int i = 0; i < toteTagList.size(); i++) {
-			double tagDistance = toteTagList.get(i).getBestCameraToTarget().getTranslation().toTranslation2d().getNorm();
-			if (tagDistance < lowestDistance) {
-				lowestDistance = tagDistance;
-				closestTag = i;
+			Translation2d tagTranslation = toteTagList.get(i).getBestCameraToTarget().getTranslation().toTranslation2d().rotateBy(getPose().getRotation());
+			tagTranslation = tagTranslation.div(tagTranslation.getNorm());
+			double tagAngle = Math.pow(robotDirection.getX() * tagTranslation.getX() + robotDirection.getY() * tagTranslation.getY(), 1.0);
+			log(String.format("Tote %d angle", toteTagList.get(i).getFiducialId()), tagAngle);
+
+			double tagDistance = cameraToTarget.getTranslation().toTranslation2d().getNorm() + 10.0;
+			double tagScore = tagAngle / tagDistance;
+			if (tagScore > bestScore) {
+				bestScore = tagScore;
+				bestTag = i;
 			}
 		}
 
-		log("Closest tag ID", toteTagList.get(closestTag).getFiducialId());
+		log("Best tag ID", toteTagList.get(bestTag).getFiducialId());
 
 		// TODO: Add a second filter to 'validTransforms' to select best target.
-		PhotonTrackedTarget bestTarget = toteTagList.get(closestTag);
+		PhotonTrackedTarget bestTarget = toteTagList.get(bestTag);
 		Transform3d camToTargetTransform = bestTarget.getBestCameraToTarget();
 		Transform3d robotToTargetTransform = VisionConstants.ROBOT_TO_CAMERA_TRANSFORM.plus(camToTargetTransform);
 		// double targetYaw = bestTarget.getYaw();

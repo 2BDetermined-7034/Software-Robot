@@ -12,21 +12,23 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.SubsystemLogging;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
+
+
 /**
  * This class uses PID to drive towards a vision supplied destination pose.
  */
 public class PIDToVisionPose extends Command implements SubsystemLogging {
 
-    private PIDController xController = new PIDController(2.0, 0.0, 0.0);
-    private PIDController yController = new PIDController(2.0, 0.0, 0.0);
-    private PIDController omegaController = new PIDController(1.0, 0.0, 0.0);
+    private final PIDController xController = new PIDController(1.0, 0.0, 0.0);
+    private final PIDController yController = new PIDController(1.0, 0.0, 0);
+    private final PIDController omegaController = new PIDController(1.0, 0.0, 0.001);
 
     private SwerveSubsystem drivebase;
 
     /**
      * Setpoint pose supplier
      */
-    private Supplier<Optional<Pose2d>> setpointSupplier = () -> drivebase.getToteDestinationPose();
+    private final Supplier<Optional<Pose2d>> setpointSupplier = () -> drivebase.getToteDestinationPose();
 
     /**
      * Fallback cached destination pose
@@ -34,7 +36,7 @@ public class PIDToVisionPose extends Command implements SubsystemLogging {
     private Pose2d lastPose = new Pose2d();
 
     /**
-     * Drives to a pose supplied by {@link SwerveSubsystem.getToteDestinationPose}
+     * Drives to a pose supplied by {@link SwerveSubsystem.getToteDestinationPose()}
      * using PID,
      * or whatever is pointed to by {@link PIDToVisionPose.poseSupplier}
      */
