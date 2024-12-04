@@ -317,19 +317,23 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 	}
 
 	/**
-	 * Get the destination pose on request to pathfind to a tote filtered Apriltag
-	 * TODO: 1. set an offset for the destination pose to prevent collisions with
-	 * the apriltag
-	 *
+	 * Get the destination pose on request to pathfind to a tote filtered Apriltag from Constants
 	 */
 	public Optional<Pose2d> getToteDestinationPose() {
+		return getToteDestinationPose(VisionConstants.TOTE_TAG_FILTER, new Transform2d(0, 0, new Rotation2d(0)));
+	}
+
+	/**
+	 * Get the destination pose on request to pathfind to a tote filtered Apriltag specified by filter
+	 */
+	public Optional<Pose2d> getToteDestinationPose(List<Integer> filter, Transform2d offset) {
 		if (!photonVision.hasTargets()) {
 			log("Tag list has values", false);
 
 			return Optional.empty();
 		}
 
-		List<PhotonTrackedTarget> toteTagList = photonVision.getTargetList();//photonVision.getFilteredTargetList(VisionConstants.TOTE_TAG_FILTER);
+		List<PhotonTrackedTarget> toteTagList = photonVision.getFilteredTargetList(filter);
 
 		if (toteTagList.isEmpty()) {
 			log("Tag list has values", false);
@@ -366,7 +370,7 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 		// double targetYaw = bestTarget.getYaw();
 		Transform2d bestTagOffset = new Transform2d(robotToTargetTransform.getX(), robotToTargetTransform.getY(), robotToTargetTransform.getRotation().toRotation2d());
 
-		Pose2d result = swerveDrive.getPose().plus(bestTagOffset);
+		Pose2d result = swerveDrive.getPose().plus(bestTagOffset).plus(offset);
 		return Optional
 				.of(new Pose2d(new Translation2d(result.getX(), result.getY()), result.getRotation().rotateBy(Rotation2d.fromDegrees(180))));
 	}
@@ -438,15 +442,9 @@ public class SwerveSubsystem extends SubsystemBase implements SubsystemLogging {
 	}
 
 	private void updateLogging() {
-		var tote = getToteDestinationPose();
-		log("Test Destination", new Pose2d(new Translation2d(1, 1), Rotation2d.fromDegrees(0)));
 	}
 
 	private void updateLoggingSim() {
-		var tote = getToteDestinationPose();
-		if (tote.isPresent()) {
-			log("Tote Pathfind Destination", tote.get());
-		}
 	}
 
 	/**

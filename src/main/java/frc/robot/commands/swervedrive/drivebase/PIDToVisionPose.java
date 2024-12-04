@@ -28,7 +28,7 @@ public class PIDToVisionPose extends Command implements SubsystemLogging {
     /**
      * Setpoint pose supplier
      */
-    private final Supplier<Optional<Pose2d>> setpointSupplier = () -> drivebase.getToteDestinationPose();
+    private final Supplier<Optional<Pose2d>> setpointSupplier;
 
     /**
      * Fallback cached destination pose
@@ -36,13 +36,14 @@ public class PIDToVisionPose extends Command implements SubsystemLogging {
     private Pose2d lastPose = new Pose2d();
 
     /**
-     * Drives to a pose supplied by {@link SwerveSubsystem.getToteDestinationPose()}
+     * Drives to a pose supplied by {@link SwerveSubsystem#getToteDestinationPose()}
      * using PID,
-     * or whatever is pointed to by {@link PIDToVisionPose.poseSupplier}
+     * or whatever is pointed to by {@link PIDToVisionPose#poseSupplier}
      */
-    public PIDToVisionPose(SwerveSubsystem drivebase) {
+    public PIDToVisionPose(SwerveSubsystem drivebase, Supplier<Optional<Pose2d>> setpointSupplier) {
         this.drivebase = drivebase;
         addRequirements(drivebase);
+        this.setpointSupplier = setpointSupplier;
 
         xController.setTolerance(0.03);
         yController.setTolerance(0.03);

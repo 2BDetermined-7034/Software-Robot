@@ -6,15 +6,21 @@ package frc.robot;
 
 import java.io.File;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.swervedrive.auto.PathFindToLowZone;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.PIDToVisionPose;
 import frc.robot.commands.swervedrive.drivebase.PathFindToTag;
@@ -36,12 +42,15 @@ public class RobotContainer {
     private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
             "swerve/neo"));
 
+    private final SendableChooser<Command> autoChooser;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         // Configure the trigger bindings
         configureBindings();
+        registerNamedCommands();
 
         // Applies deadbands and inverts controls because joysticks
         // are back-right positive while robot
@@ -92,6 +101,17 @@ public class RobotContainer {
 
         drivebase.setDefaultCommand(
                 RobotBase.isSimulation() ? driveFieldOrientedAngularVelocitySim : driveFieldOrientedAngularVelocity);
+
+        //auto config
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+        autoChooser.addOption("Do nothing", Commands.none());
+        autoChooser.addOption("Drive Backward Middle", new PathPlannerAuto("Drive Backward"));
+        autoChooser.addOption("Drive Forward Middle", new PathPlannerAuto("Drive Forward"));
+    }
+
+    private void registerNamedCommands() {
+        NamedCommands.registerCommand("Path From Left to Left", new PathFindToLowZone(drivebase));
     }
 
     /**
@@ -133,7 +153,7 @@ public class RobotContainer {
         // drivebase).repeatedly());
 
         // driverController.square().whileTrue(PathFindToTag.pathFindToTag(drivebase));
-        driverController.triangle().whileTrue(new PIDToVisionPose(drivebase));
+        driverController.triangle().whileTrue(new PIDToVisionPose(drivebase, drivebase::getToteDestinationPose));
 
     }
 
@@ -144,7 +164,8 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
-        return drivebase.getAutonomousCommand("Drive Backward");
+        // return drivebase.getAutonomousCommand("Drive Backward");
+        return autoChooser.getSelected();
     }
 
     public void setDriveMode() {
