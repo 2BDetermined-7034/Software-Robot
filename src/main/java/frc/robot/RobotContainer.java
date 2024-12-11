@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.swervedrive.auto.PathFindToLowZone;
+import frc.robot.commands.swervedrive.auto.PathFindToTote;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.PIDToVisionPose;
 import frc.robot.commands.swervedrive.drivebase.PathFindToTag;
@@ -106,12 +107,24 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
         autoChooser.addOption("Do nothing", Commands.none());
-        autoChooser.addOption("Drive Backward Middle", new PathPlannerAuto("Drive Backward"));
-        autoChooser.addOption("Drive Forward Middle", new PathPlannerAuto("Drive Forward"));
+        autoChooser.addOption("Low Zone Left", new PathPlannerAuto("Low Zone Left"));
+        autoChooser.addOption("Low Zone Right", new PathPlannerAuto("Low Zone Right"));
+        autoChooser.addOption("Low Zone Middle", new PathPlannerAuto("Low Zone Middle"));
+        autoChooser.addOption("Path Find to Close Tote", new PathPlannerAuto("Middle Tote Left"));
+        autoChooser.addOption("Path Find to Middle Tote", new PathPlannerAuto("Middle Tote Left"));
+        autoChooser.addOption("Path Find to Close Far", new PathPlannerAuto("Middle Tote Left"));
     }
 
     private void registerNamedCommands() {
-        NamedCommands.registerCommand("Path From Left to Left", new PathFindToLowZone(drivebase));
+        NamedCommands.registerCommand("LEFT: Path Find to Low Zone", new PathFindToLowZone(drivebase, PathFindToLowZone.Position.LEFT));
+        NamedCommands.registerCommand("MIDDLE: Path Find to Low Zone", new PathFindToLowZone(drivebase, PathFindToLowZone.Position.MIDDLE));
+        NamedCommands.registerCommand("RIGHT: Path Find to Low Zone", new PathFindToLowZone(drivebase, PathFindToLowZone.Position.RIGHT));
+
+        NamedCommands.registerCommand("Path Find to Close Tote", new PathFindToTote(drivebase, PathFindToTote.Position.CLOSE));
+        NamedCommands.registerCommand("Path Find to Middle Tote", Commands.deferredProxy(() -> new PathFindToTote(drivebase, PathFindToTote.Position.MIDDLE)));
+        NamedCommands.registerCommand("Path Find to Far Tote", new PathFindToTote(drivebase, PathFindToTote.Position.FAR));
+
+
     }
 
     /**

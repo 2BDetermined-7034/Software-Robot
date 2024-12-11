@@ -43,8 +43,8 @@ public final class Constants {
 
 	public static final class AutonConstants {
 
-		public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-		public static final PIDConstants ANGLE_PID = new PIDConstants(0.4, 0, 0.01);
+		public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.35, 0, 0);
+		public static final PIDConstants ANGLE_PID = new PIDConstants(0.2, 0, 0.01);
 	}
 
 	public static final class DrivebaseConstants {
