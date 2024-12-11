@@ -110,21 +110,20 @@ public class RobotContainer {
         autoChooser.addOption("Low Zone Left", new PathPlannerAuto("Low Zone Left"));
         autoChooser.addOption("Low Zone Right", new PathPlannerAuto("Low Zone Right"));
         autoChooser.addOption("Low Zone Middle", new PathPlannerAuto("Low Zone Middle"));
-        autoChooser.addOption("Path Find to Close Tote", new PathPlannerAuto("Middle Tote Left"));
-        autoChooser.addOption("Path Find to Middle Tote", new PathPlannerAuto("Middle Tote Left"));
-        autoChooser.addOption("Path Find to Close Far", new PathPlannerAuto("Middle Tote Left"));
+        autoChooser.addOption("Far Tote Left", Commands.deferredProxy(() -> new PathFindToTote(drivebase, PathFindToTote.Position.FAR)));
+        autoChooser.addOption("Far Tote Right", Commands.deferredProxy(() -> new PathFindToTote(drivebase, PathFindToTote.Position.FAR)));
+        autoChooser.addOption("Middle Tote Left", new PathPlannerAuto("Middle Tote Left"));
+        autoChooser.addOption("Middle Tote Right", new PathPlannerAuto("Middle Tote Right"));
+        autoChooser.addOption("Close Tote Left", new PathPlannerAuto("Close Tote Left"));
+        autoChooser.addOption("Close Tote Right", new PathPlannerAuto("Close Tote Right"));
     }
 
     private void registerNamedCommands() {
         NamedCommands.registerCommand("LEFT: Path Find to Low Zone", new PathFindToLowZone(drivebase, PathFindToLowZone.Position.LEFT));
         NamedCommands.registerCommand("MIDDLE: Path Find to Low Zone", new PathFindToLowZone(drivebase, PathFindToLowZone.Position.MIDDLE));
         NamedCommands.registerCommand("RIGHT: Path Find to Low Zone", new PathFindToLowZone(drivebase, PathFindToLowZone.Position.RIGHT));
-
-        NamedCommands.registerCommand("Path Find to Close Tote", new PathFindToTote(drivebase, PathFindToTote.Position.CLOSE));
         NamedCommands.registerCommand("Path Find to Middle Tote", Commands.deferredProxy(() -> new PathFindToTote(drivebase, PathFindToTote.Position.MIDDLE)));
-        NamedCommands.registerCommand("Path Find to Far Tote", new PathFindToTote(drivebase, PathFindToTote.Position.FAR));
-
-
+        NamedCommands.registerCommand("Path Find to Close Tote", Commands.deferredProxy(() -> new PathFindToTote(drivebase, PathFindToTote.Position.CLOSE)));
     }
 
     /**

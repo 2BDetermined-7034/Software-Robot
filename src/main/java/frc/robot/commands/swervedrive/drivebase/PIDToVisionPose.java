@@ -8,8 +8,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.SubsystemLogging;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -21,9 +19,9 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
  */
 public class PIDToVisionPose extends Command implements SubsystemLogging {
 
-    private final PIDController xController = new PIDController(``0.2, 0.1, 0.0);
-    private final PIDController yController = new PIDController(0.2, 0.1, 0);
-    private final PIDController omegaController = new PIDController(1.0, 0.0, 0.001);``
+    private final PIDController xController = new PIDController(1.0, 0.0, 0.0);
+    private final PIDController yController = new PIDController(1.0, 0.0, 0);
+    private final PIDController omegaController = new PIDController(1.0, 0.0, 0.001);
 
     private SwerveSubsystem drivebase;
 
@@ -36,53 +34,41 @@ public class PIDToVisionPose extends Command implements SubsystemLogging {
      * Fallback cached destination pose
      */
     private Pose2d lastPose;
+
     /**
      * Drives to a pose supplied by {@link SwerveSubsystem#getToteDestinationPose()}
      * using PID,
-     * or whatever is pointed to by {@link PIDToVisionPose#setpointSupplier}
+     * or whatever is pointed to by {@link PIDToVisionPose#poseSupplier}
      */
     public PIDToVisionPose(SwerveSubsystem drivebase, Supplier<Optional<Pose2d>> setpointSupplier) {
         this.drivebase = drivebase;
         addRequirements(drivebase);
         this.setpointSupplier = setpointSupplier;
 
-        xController.setTolerance(0.075);
-        yController.setTolerance(0.075);
-        omegaController.setTolerance(Units.degreesToRadians(20));
+        xController.setTolerance(0.03);
+        yController.setTolerance(0.03);
+        omegaController.setTolerance(3);
 
         omegaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        this.lastPose = drivebase.getPose();
+        lastPose = drivebase.getPose();
     }
 
     @Override
     public void execute() {
-        var potentialSetpoint = setpointSupplier.get();
-        if (potentialSetpoint.isPresent()) {
-            Pose2d setpoint = potentialSetpoint.get();
-            log("PID Pose Setpoint:", setpoint);
-            Pose2d robotPose = drivebase.getPose();
+        Pose2d setpoint = setpointSupplier.get().orElseGet(() -> this.lastPose);
+        log("PID Pose Setpoint:", setpoint);
+        Pose2d robotPose = drivebase.getPose();
 
-            double vx_mps = xController.calculate(robotPose.getX(), setpoint.getX());
-            double vy_mps = yController.calculate(robotPose.getY(), setpoint.getY());
-            double omega_rps = omegaController.calculate(wrapRotationRadians(robotPose.getRotation()),
-                    wrapRotationRadians(setpoint.getRotation()));
+        double vx_mps = xController.calculate(robotPose.getX(), setpoint.getX());
+        double vy_mps = yController.calculate(robotPose.getY(), setpoint.getY());
+        double omega_rps = omegaController.calculate(wrapRotationRadians(robotPose.getRotation()),
+                wrapRotationRadians(setpoint.getRotation()));
 
-            drivebase.driveFieldOriented(new ChassisSpeeds(vx_mps, vy_mps, omega_rps));
+        drivebase.driveFieldOriented(new ChassisSpeeds(vx_mps, vy_mps, omega_rps));
 
-            lastPose = setpoint;
-        } else {
-            Pose2d setpoint = lastPose;
-            log("PID Pose Setpoint:", setpoint);
-//            Pose2d robotPose = drivebase.getPose();
+        lastPose = setpoint;
 
-//            double vx_mps = xController.calculate(robotPose.getX(), setpoint.getX());
-//            double vy_mps = yController.calculate(robotPose.getY(), setpoint.getY());
-//            double omega_rps = omegaController.calculate(wrapRotationRadians(robotPose.getRotation()),
-//                    wrapRotationRadians(setpoint.getRotation()));
-
-//            drivebase.driveFieldOriented(new ChassisSpeeds(vx_mps, vy_mps, omega_rps));
-        }
     }
 
     @Override

@@ -66,7 +66,7 @@ public class PathFindToTote extends PIDToVisionPose {
 								break;
 						}
 					}
-					return drivebase.getToteDestinationPose(filter, new Transform2d(1, 0, new Rotation2d(0)));
+					return drivebase.getToteDestinationPose(filter, new Transform2d(0.4, 0, new Rotation2d(0)));
 				}
 		);
 	}

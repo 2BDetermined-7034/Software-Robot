@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 4.66918238993922,
+      "y": 2.7150943396233655
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Drive to Low Zone Middle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "MIDDLE: Path Find to Low Zone"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
